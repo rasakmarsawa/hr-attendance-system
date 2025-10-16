@@ -45,4 +45,32 @@ class User extends Authenticatable
             'password' => 'hashed',
         ];
     }
+
+    public function role()
+    {
+        return $this->belongsTo(Role::class);
+    }  
+
+    public function isAdmin()
+    {
+        if($this->role && $this->role->name === 'Admin'){
+            return true;
+        }
+
+        return false;
+    }
+
+    public function isEmployee()
+    {
+        if($this->role && $this->role->name === 'Employee'){
+            return true;
+        }
+
+        return false;
+    }
+
+    public function employee()
+    {
+        return $this->hasOne(Employee::class);
+    }
 }

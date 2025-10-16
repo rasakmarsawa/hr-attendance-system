@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="csrf-token" content="{{ csrf_token() }}">
+
+        <title>{{ config('app.name', 'Laravel') }}</title>
+
+        <!-- Fonts -->
+        <link rel="preconnect" href="https://fonts.bunny.net">
+        <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" />
+
+        <!-- Scripts -->
+        @vite(['resources/css/app.css', 'resources/js/app.js'])
+    </head>
+    <body class="font-sans antialiased">
+        <div class="min-h-screen bg-gray-100 flex">
+            <!-- Sidebar (visible on large screens) -->
+            <aside class="hidden lg:flex lg:flex-col lg:w-64 lg:fixed lg:inset-y-0 bg-white border-r">
+                <div class="px-6 py-4 border-b">
+                    <a href="{{ url('/') }}" class="text-lg font-semibold text-gray-800">
+                        {{ config('app.name', 'Laravel') }}
+                    </a>
+                </div>
+                <nav class="flex-1 px-2 py-4 space-y-1 overflow-y-auto">
+                    <a href="{{ route('dashboard') }}"
+                       class="{{ request()->routeIs('dashboard') ? 'block px-4 py-2 rounded-md text-sm text-indigo-700 bg-indigo-50 font-medium' : 'block px-4 py-2 rounded-md text-sm text-gray-700 hover:bg-gray-100' }}"
+                       aria-current="{{ request()->routeIs('dashboard') ? 'page' : '' }}">
+                        Dashboard
+                    </a>
+                    <a href="{{ route('profile.edit') }}"
+                       class="{{ request()->routeIs('profile.edit') ? 'block px-4 py-2 rounded-md text-sm text-indigo-700 bg-indigo-50 font-medium' : 'block px-4 py-2 rounded-md text-sm text-gray-700 hover:bg-gray-100' }}"
+                       aria-current="{{ request()->routeIs('profile.edit') ? 'page' : '' }}">
+                        Profile
+                    </a>
+                    @if(Auth::user() && Auth::user()->isAdmin())
+                    <a href="{{ route('user.index') }}"
+                       class="{{ request()->is('user*') ? 'block px-4 py-2 rounded-md text-sm text-indigo-700 bg-indigo-50 font-medium' : 'block px-4 py-2 rounded-md text-sm text-gray-700 hover:bg-gray-100' }}"
+                       aria-current="{{ request()->is('user*') ? 'page' : '' }}">
+                        User Management
+                    </a>                    
+                    <a href="{{ route('department.index') }}"
+                       class="{{ request()->is('department*') ? 'block px-4 py-2 rounded-md text-sm text-indigo-700 bg-indigo-50 font-medium' : 'block px-4 py-2 rounded-md text-sm text-gray-700 hover:bg-gray-100' }}"
+                       aria-current="{{ request()->is('department*') ? 'page' : '' }}">
+                        Department
+                    </a>
+                    <a href="{{ url('/payrol') }}"
+                       class="{{ request()->is('payrol*') ? 'block px-4 py-2 rounded-md text-sm text-indigo-700 bg-indigo-50 font-medium' : 'block px-4 py-2 rounded-md text-sm text-gray-700 hover:bg-gray-100' }}"
+                       aria-current="{{ request()->is('payrol*') ? 'page' : '' }}">
+                        Payrol
+                    </a>
+                    @endif
+                    @if(Auth::user() && Auth::user()->isEmployee())
+                    <a href="{{ url('/attendance') }}"
+                       class="{{ request()->is('attendance*') ? 'block px-4 py-2 rounded-md text-sm text-indigo-700 bg-indigo-50 font-medium' : 'block px-4 py-2 rounded-md text-sm text-gray-700 hover:bg-gray-100' }}"
+                       aria-current="{{ request()->is('attendance*') ? 'page' : '' }}">
+                        Attendance
+                    @endif
+                    <form method="POST" action="{{ route('logout') }}" class="mt-4 px-4">
+                        @csrf
+                        <button type="submit" class="w-full text-left px-4 py-2 rounded-md text-sm text-red-600 hover:bg-red-50">Logout</button>
+                    </form>
+                </nav>
+            </aside>
+
+            <!-- Main content column -->
+            <div class="flex-1 lg:pl-64">
+                <!-- Top navigation (mobile & small screens) -->
+                <header class="bg-white border-b lg:hidden">
+                    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                        <div class="flex items-center justify-between h-16">
+                            <div class="flex items-center space-x-3">
+                                <a href="{{ route('dashboard') }}" class="text-lg font-semibold text-gray-800">{{ config('app.name', 'Laravel') }}</a>
+                            </div>
+                            <div class="flex items-center">
+                                <!-- simple links for mobile -->
+                                <a href="#" class="text-sm text-gray-700 mr-4">Posts</a>
+                                <a href="#" class="text-sm text-gray-700">Dashboard</a>
+                            </div>
+                        </div>
+                    </div>
+                </header>
+
+                <!-- Page Heading -->
+                @isset($header)
+                    <header class="bg-white shadow">
+                        <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
+                            {{ $header }}
+                        </div>
+                    </header>
+                @endisset
+
+                <!-- Page Content -->
+                <main>
+                    <div class="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8 px-4">
+                        {{ $slot }}
+                    </div>
+                </main>
+            </div>
+        </div>
+    </body>
+</html>
