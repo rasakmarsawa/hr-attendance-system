@@ -42,6 +42,7 @@
                             <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Name</th>
                             <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Email</th>
                             <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Role</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
                             <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
                         </tr>
                     </thead>
@@ -51,6 +52,7 @@
                                 <td class="px-6 py-4 text-sm text-gray-900">{{ $user->name }}</td>
                                 <td class="px-6 py-4 text-sm text-gray-500">{{ $user->email }}</td>
                                 <td class="px-6 py-4 text-sm text-gray-500">{{ $user->role->name }}</td>
+                                <td class="px-6 py-4 text-sm text-gray-500">{{ $user->employee->status??'-' }}</td>
                                 <td class="px-6 py-4 text-sm text-right space-x-2">
                                     <a href="{{ route('user.show', $user) }}"
                                        class="inline-block px-3 py-1 bg-green-600 text-white rounded-lg shadow hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-400">
