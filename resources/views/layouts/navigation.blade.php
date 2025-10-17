@@ -27,10 +27,10 @@
                        aria-current="{{ request()->is('attendance*') ? 'page' : '' }}">
                         Attendance
                     </a>                      
-                    <a href="{{ url('/payrol') }}"
-                       class="{{ request()->is('payrol*') ? 'block px-4 py-2 rounded-md text-sm text-indigo-700 bg-indigo-50 font-medium' : 'block px-4 py-2 rounded-md text-sm text-gray-700 hover:bg-gray-100' }}"
-                       aria-current="{{ request()->is('payrol*') ? 'page' : '' }}">
-                        Payrol
+                    <a href="{{ route('payroll.index') }}"
+                       class="{{ request()->is('payroll*') ? 'block px-4 py-2 rounded-md text-sm text-indigo-700 bg-indigo-50 font-medium' : 'block px-4 py-2 rounded-md text-sm text-gray-700 hover:bg-gray-100' }}"
+                       aria-current="{{ request()->is('payroll*') ? 'page' : '' }}">
+                        Payroll
                     </a>                  
                     @endif
                     @if(Auth::user() && Auth::user()->isEmployee())

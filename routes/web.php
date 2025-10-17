@@ -23,6 +23,12 @@ Route::middleware(['auth','role:Admin'])->group(function () {
     Route::post('/attendance/pre-fill', [App\Http\Controllers\AttendanceController::class, 'store'])->name('attendance.store');
     Route::get('/attendance/report', [App\Http\Controllers\AttendanceController::class, 'report'])->name('attendance.report');
     Route::get('/attendance/export', App\Http\Controllers\AttendanceExportController::class)->name('attendance.export');
+
+    Route::resource('payroll', App\Http\Controllers\PayrollController::class);
+    Route::get('/payroll/monthly', [App\Http\Controllers\PayrollController::class, 'monthly'])->name('payroll.monthly');
+    Route::post('/payroll/generate', [App\Http\Controllers\PayrollController::class, 'generate'])->name('payroll.generate');
+    Route::post('/payroll/{payroll}/finalize', [App\Http\Controllers\PayrollController::class, 'finalize'])->name('payroll.finalize');  
+    route::post('/payroll/finalize-all', [App\Http\Controllers\PayrollController::class, 'finalizeAll'])->name('payroll.finalizeAll');  
 });
 
 Route::middleware('auth')->group(function () {
