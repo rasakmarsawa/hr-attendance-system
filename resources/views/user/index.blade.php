@@ -6,6 +6,24 @@
     </x-slot>
 
     <div class="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8 px-4">
+         @if(session('success'))
+            <div class="mb-4">
+                <div class="rounded-md bg-green-50 p-4">
+                    <div class="flex">
+                        <div class="flex-shrink-0">
+                            <svg class="h-5 w-5 text-green-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m1 8a9 9 0 11-18 0 9 9 0 0118 0z" />
+                            </svg>
+                        </div>
+                        <div class="ml-3">
+                            <p class="text-sm font-medium text-green-800">
+                                {{ session('success') }}
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        @endif
         <div class="mb-4 flex items-center justify-between">
             <div>
                 <h3 class="text-lg font-medium text-gray-900">All users</h3>
@@ -24,7 +42,6 @@
                             <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Name</th>
                             <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Email</th>
                             <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Role</th>
-                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Created</th>
                             <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
                         </tr>
                     </thead>
@@ -34,7 +51,6 @@
                                 <td class="px-6 py-4 text-sm text-gray-900">{{ $user->name }}</td>
                                 <td class="px-6 py-4 text-sm text-gray-500">{{ $user->email }}</td>
                                 <td class="px-6 py-4 text-sm text-gray-500">{{ $user->role->name }}</td>
-                                <td class="px-6 py-4 text-sm text-gray-500">{{ $user->created_at->format('Y-m-d') }}</td>
                                 <td class="px-6 py-4 text-sm text-right space-x-2">
                                     <a href="{{ route('user.show', $user) }}"
                                        class="inline-block px-3 py-1 bg-green-600 text-white rounded-lg shadow hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-400">

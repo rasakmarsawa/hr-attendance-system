@@ -29,11 +29,6 @@
                        aria-current="{{ request()->routeIs('dashboard') ? 'page' : '' }}">
                         Dashboard
                     </a>
-                    <a href="{{ route('profile.edit') }}"
-                       class="{{ request()->routeIs('profile.edit') ? 'block px-4 py-2 rounded-md text-sm text-indigo-700 bg-indigo-50 font-medium' : 'block px-4 py-2 rounded-md text-sm text-gray-700 hover:bg-gray-100' }}"
-                       aria-current="{{ request()->routeIs('profile.edit') ? 'page' : '' }}">
-                        Profile
-                    </a>
                     @if(Auth::user() && Auth::user()->isAdmin())
                     <a href="{{ route('user.index') }}"
                        class="{{ request()->is('user*') ? 'block px-4 py-2 rounded-md text-sm text-indigo-700 bg-indigo-50 font-medium' : 'block px-4 py-2 rounded-md text-sm text-gray-700 hover:bg-gray-100' }}"
@@ -52,10 +47,16 @@
                     </a>
                     @endif
                     @if(Auth::user() && Auth::user()->isEmployee())
+                    <a href="{{ route('user.edit', Auth::user()->id) }}"
+                       class="{{ request()->is('user*') ? 'block px-4 py-2 rounded-md text-sm text-indigo-700 bg-indigo-50 font-medium' : 'block px-4 py-2 rounded-md text-sm text-gray-700 hover:bg-gray-100' }}"
+                       aria-current="{{ request()->is('user*') ? 'page' : '' }}">
+                        Edit Profile
+                    </a>
                     <a href="{{ url('/attendance') }}"
                        class="{{ request()->is('attendance*') ? 'block px-4 py-2 rounded-md text-sm text-indigo-700 bg-indigo-50 font-medium' : 'block px-4 py-2 rounded-md text-sm text-gray-700 hover:bg-gray-100' }}"
                        aria-current="{{ request()->is('attendance*') ? 'page' : '' }}">
                         Attendance
+                    </a>
                     @endif
                     <form method="POST" action="{{ route('logout') }}" class="mt-4 px-4">
                         @csrf

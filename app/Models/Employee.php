@@ -11,12 +11,15 @@ class Employee extends Model
 
     protected $fillable = [
         'user_id',
-        'employee_code',
         'department_id',
         'position',
         'daily_rate',
-        'joining_date',
+        'join_date',
         'status',
+    ];
+
+    protected $casts = [
+        'join_date' => 'date',
     ];
 
     public function user()
