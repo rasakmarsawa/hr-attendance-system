@@ -12,31 +12,46 @@ Route::get('/dashboard', function () {
 })->middleware(['auth', 'verified'])->name('dashboard');
 
 Route::middleware(['auth','role:Admin'])->group(function () {
+    //user routes
     Route::resource('user', App\Http\Controllers\UserController::class)->except('edit','update');
 
+    //department routes
     Route::resource('department', App\Http\Controllers\DepartmentController::class);
 
+    //employee routes
     Route::resource('employee', App\Http\Controllers\EmployeeController::class)->except('create');
     Route::get('/employee/create/{user}', [App\Http\Controllers\EmployeeController::class, 'create'])->name('employee.create');
 
+    //attendance routes
     Route::get('/attendance', [App\Http\Controllers\AttendanceController::class, 'index'])->name('attendance.index');   
     Route::post('/attendance/pre-fill', [App\Http\Controllers\AttendanceController::class, 'store'])->name('attendance.store');
     Route::get('/attendance/report', [App\Http\Controllers\AttendanceController::class, 'report'])->name('attendance.report');
     Route::get('/attendance/export', App\Http\Controllers\AttendanceExportController::class)->name('attendance.export');
 
-    Route::resource('payroll', App\Http\Controllers\PayrollController::class);
-    Route::get('/payroll/monthly', [App\Http\Controllers\PayrollController::class, 'monthly'])->name('payroll.monthly');
-    Route::post('/payroll/generate', [App\Http\Controllers\PayrollController::class, 'generate'])->name('payroll.generate');
-    Route::post('/payroll/{payroll}/finalize', [App\Http\Controllers\PayrollController::class, 'finalize'])->name('payroll.finalize');  
-    route::post('/payroll/finalize-all', [App\Http\Controllers\PayrollController::class, 'finalizeAll'])->name('payroll.finalizeAll');  
+    //payroll routes
+    Route::resource('payroll', App\Http\Controllers\PayrollController::class)->only(['edit', 'update', 'destroy']);
+    Route::get('/payroll/index/{month}/{year}', [App\Http\Controllers\PayrollController::class, 'index'])->name('payroll.index');
+    
+    //bulk routes
+    Route::post('/payroll/finalize-all/{month}/{year}', [App\Http\Controllers\PayrollController::class, 'finalizeAll'])->name('payroll.finalizeAll');
+    Route::post('/payroll/generate/{month}/{year}', [App\Http\Controllers\PayrollController::class, 'generate'])->name('payroll.generate');
+    Route::get('/payroll/export/{month}/{year}', [App\Http\Controllers\PayrollController::class, 'export'])->name('payroll.export');
+
+    //single routes
+    Route::post('/payroll/{payroll}/finalize', [App\Http\Controllers\PayrollController::class, 'finalize'])->name('payroll.finalize');          
+
+    Route::put('/payroll/pay/{payroll}', [App\Http\Controllers\PayrollController::class, 'pay'])->name('payroll.pay');
 });
 
 Route::middleware('auth')->group(function () {
-    Route::get('/user/{user}/edit', [App\Http\Controllers\UserController::class, 'edit'])->name('user.edit');
-    Route::put('/user/{user}', [App\Http\Controllers\UserController::class, 'update'])->name('user.update');        
+    Route::get('/my-profile/{user}/edit', [App\Http\Controllers\UserController::class, 'edit'])->name('user.edit');
+    Route::put('/my-profile/{user}', [App\Http\Controllers\UserController::class, 'update'])->name('user.update');        
     
     Route::post('/check-in', [App\Http\Controllers\AttendanceController::class, 'checkIn'])->name('attendance.checkin');
     Route::post('/check-out', [App\Http\Controllers\AttendanceController::class, 'checkOut'])->name('attendance.checkout');
+
+    Route::get('/my-payroll', [App\Http\Controllers\PayrollController::class, 'myPayroll'])->name('payroll.myPayroll'); 
+    Route::get('/payroll/exportOne/{payroll}', [App\Http\Controllers\PayrollController::class, 'exportOne'])->name('payroll.exportOne');
 });
 
 require __DIR__.'/auth.php';

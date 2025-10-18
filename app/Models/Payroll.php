@@ -18,6 +18,7 @@ class payroll extends Model
         'status',
         'issued_by',
         'issued_at',
+        'payment_datetime',
     ];
 
     protected $casts = [

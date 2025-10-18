@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\attendance;
+use App\Models\Attendance;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
@@ -11,7 +11,7 @@ class AttendanceController extends Controller
 {
     public function index()
     {
-        $attendances = attendance::where('date', date('Y-m-d'))->get();
+        $attendances = Attendance::where('date', date('Y-m-d'))->get();
         return view('attendance.index', compact('attendances'));
     }
 
@@ -24,7 +24,7 @@ class AttendanceController extends Controller
         $today = date('Y-m-d');
 
         foreach ($employees as $employee) {
-            attendance::firstOrCreate(
+            Attendance::firstOrCreate(
                 ['user_id' => $employee->id, 'date' => $today],
                 ['status' => 'absent']
             );
@@ -47,7 +47,7 @@ class AttendanceController extends Controller
 
         $status = $currentTime->gt($cutoff) ? 'late' : 'present';
 
-        $attendance = attendance::updateOrCreate(
+        $attendance = Attendance::updateOrCreate(
             ['user_id' => $user->id, 'date' => $today],
             ['status' => $status]
         );
@@ -63,7 +63,7 @@ class AttendanceController extends Controller
         $user = auth()->user();
         $today = date('Y-m-d');
 
-        $attendance = attendance::where('user_id', $user->id)
+        $attendance = Attendance::where('user_id', $user->id)
             ->where('date', $today)
             ->first();
 

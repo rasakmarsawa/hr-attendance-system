@@ -14,7 +14,7 @@ class EmployeeSeeder extends Seeder
      */
     public function run(): void
     {
-        $employees = User::where('role_id', 2)->get();
+        $employees = User::all();
 
         foreach ($employees as $user) {
             Employee::firstOrCreate([

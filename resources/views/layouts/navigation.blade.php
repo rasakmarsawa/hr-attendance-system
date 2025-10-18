@@ -11,6 +11,16 @@
                        aria-current="{{ request()->routeIs('dashboard') ? 'page' : '' }}">
                         Dashboard
                     </a>
+                    <a href="{{ route('payroll.myPayroll') }}"
+                       class="{{ request()->is('my-payroll*') ? 'block px-4 py-2 rounded-md text-sm text-indigo-700 bg-indigo-50 font-medium' : 'block px-4 py-2 rounded-md text-sm text-gray-700 hover:bg-gray-100' }}"
+                       aria-current="{{ request()->is('my-payroll*') ? 'page' : '' }}">
+                        My Payroll
+                    </a>
+                    <a href="{{ route('user.edit', Auth::user()->id) }}"
+                       class="{{ request()->is('my-profile*') ? 'block px-4 py-2 rounded-md text-sm text-indigo-700 bg-indigo-50 font-medium' : 'block px-4 py-2 rounded-md text-sm text-gray-700 hover:bg-gray-100' }}"
+                       aria-current="{{ request()->is('my-profile*') ? 'page' : '' }}">
+                        Edit My Profile
+                    </a>                    
                     @if(Auth::user() && Auth::user()->isAdmin())
                     <a href="{{ route('user.index') }}"
                        class="{{ request()->is('user*') ? 'block px-4 py-2 rounded-md text-sm text-indigo-700 bg-indigo-50 font-medium' : 'block px-4 py-2 rounded-md text-sm text-gray-700 hover:bg-gray-100' }}"
@@ -26,19 +36,16 @@
                        class="{{ request()->is('attendance*') ? 'block px-4 py-2 rounded-md text-sm text-indigo-700 bg-indigo-50 font-medium' : 'block px-4 py-2 rounded-md text-sm text-gray-700 hover:bg-gray-100' }}"
                        aria-current="{{ request()->is('attendance*') ? 'page' : '' }}">
                         Attendance
-                    </a>                      
-                    <a href="{{ route('payroll.index') }}"
+                    </a>  
+                    @php
+                        $todayMonth = date('m');
+                        $todayYear  = date('Y');
+                    @endphp                    
+                    <a href="{{ route('payroll.index', ['month' => $todayMonth, 'year' => $todayYear]) }}"
                        class="{{ request()->is('payroll*') ? 'block px-4 py-2 rounded-md text-sm text-indigo-700 bg-indigo-50 font-medium' : 'block px-4 py-2 rounded-md text-sm text-gray-700 hover:bg-gray-100' }}"
                        aria-current="{{ request()->is('payroll*') ? 'page' : '' }}">
                         Payroll
                     </a>                  
-                    @endif
-                    @if(Auth::user() && Auth::user()->isEmployee())
-                    <a href="{{ route('user.edit', Auth::user()->id) }}"
-                       class="{{ request()->is('user*') ? 'block px-4 py-2 rounded-md text-sm text-indigo-700 bg-indigo-50 font-medium' : 'block px-4 py-2 rounded-md text-sm text-gray-700 hover:bg-gray-100' }}"
-                       aria-current="{{ request()->is('user*') ? 'page' : '' }}">
-                        Edit Profile
-                    </a>
                     @endif
                     <form method="POST" action="{{ route('logout') }}" class="mt-4 px-4">
                         @csrf
