@@ -1,61 +1,181 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+## 📋 HR Attendance System
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+A **Human Resources Attendance System** built with **Laravel 12**, providing secure and efficient management for employees, attendance tracking, and payroll.
+It includes authentication, department handling, and PDF/Excel report exports — all wrapped in a clean, modern interface.
 
-## About Laravel
+---
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+### 🖼️ Screenshots
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+| Dashboard                                      | Employee List                                      | Attendance Report                                              |
+| ---------------------------------------------- | -------------------------------------------------- | -------------------------------------------------------------- |
+|<img width="400" height="250" alt="Screenshot from 2025-10-18 19-06-15" src="https://github.com/user-attachments/assets/2f613776-1aa0-4883-8add-52fae7692e2e" />|<img width="400" height="250" alt="Screenshot from 2025-10-18 19-06-48" src="https://github.com/user-attachments/assets/dbb0c4f0-1556-45b4-857d-53525a1616b3" />|<img width="400" height="250" alt="Screenshot from 2025-10-18 19-07-08" src="https://github.com/user-attachments/assets/74cdb06e-09db-4f22-9959-0e6bf0dbeb04" />|
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+| Payroll                                    | Department Management                             |
+| ------------------------------------------ | ------------------------------------------------- |
+|<img width="400" height="250" alt="Screenshot from 2025-10-18 19-07-35" src="https://github.com/user-attachments/assets/afa31783-2b53-44c7-9c6b-64ec323d6617" />|<img width="400" height="250" alt="Screenshot from 2025-10-18 19-07-48" src="https://github.com/user-attachments/assets/439a1bd3-fb2b-4b5f-b486-095390c7c60d" />|
 
-## Learning Laravel
+---
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+### 🚀 Features
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+* 🔐 **User Authentication & Roles**
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+  * Admin and Employee login via Laravel Breeze
+  * Role-based middleware protection
 
-## Laravel Sponsors
+* 🧑‍💼 **Employee Management**
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+  * Create, edit, and delete employee records
+  * Department linkage and employee code generation
 
-### Premium Partners
+* 🕒 **Attendance Tracking**
 
-- **[Vehikl](https://vehikl.com)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Redberry](https://redberry.international/laravel-development)**
-- **[Active Logic](https://activelogic.com)**
+  * Record daily presence and absences
+  * View monthly attendance reports
 
-## Contributing
+* 💰 **Payroll Management**
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+  * Store, view, and calculate payroll data
+  * Includes `department_name` field for clarity
 
-## Code of Conduct
+* 📄 **Report Exporting**
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+  * Export **attendance and payroll** to **PDF** (Dompdf)
+  * Export **Excel sheets** (Spatie Simple Excel)
 
-## Security Vulnerabilities
+* 🎨 **Modern UI**
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+  * TailwindCSS + Vite + Alpine.js frontend
+  * Clean dashboard layout and responsive design
 
-## License
+---
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+### 🧱 Tech Stack
+
+| Layer        | Technology                    |
+| ------------ | ----------------------------- |
+| **Backend**  | Laravel 12 (PHP 8.2)          |
+| **Frontend** | Tailwind CSS, Alpine.js, Vite |
+| **Database** | MySQL                         |
+| **Exports**  | Dompdf, Spatie Simple Excel   |
+| **Auth**     | Laravel Breeze                |
+
+---
+
+### 🛠️ Installation Guide
+
+#### 1. Clone Repository
+
+```bash
+git clone https://github.com/rasakmarsawa/hr-attendance-system.git
+cd hr-attendance-system
+```
+
+#### 2. Install Dependencies
+
+```bash
+composer install
+npm install
+```
+
+#### 3. Setup Environment
+
+```bash
+cp .env.example .env
+php artisan key:generate
+```
+
+#### 4. Configure Database
+
+Edit your `.env` file:
+
+```env
+DB_CONNECTION=mysql
+DB_HOST=127.0.0.1
+DB_PORT=3306
+DB_DATABASE=hr_system
+DB_USERNAME=root
+DB_PASSWORD=
+```
+
+#### 5. Run Migration and Seeder
+
+```bash
+php artisan migrate --seed
+```
+
+#### 6. Build Frontend
+
+```bash
+npm run dev
+```
+
+#### 7. Start Server
+
+```bash
+php artisan serve
+```
+
+Visit: **[http://127.0.0.1:8000](http://127.0.0.1:8000)**
+
+---
+
+### 🔐 Default Access (from Seeder)
+
+| Role     | Email                                               | Password |
+| -------- | --------------------------------------------------- | -------- |
+| Admin    | admin@example.com| password |
+| Employee | employee{number}@example.com| password |
+
+---
+
+### 📂 Project Structure
+
+```
+app/
+ ├── Http/Controllers/
+ │    ├── AttendanceController.php
+ │    ├── DepartmentController.php
+ │    ├── EmployeeController.php
+ │    ├── PayrollController.php
+ │    └── Auth/
+ ├── Models/
+ │    ├── Attendance.php
+ │    ├── Department.php
+ │    ├── Employee.php
+ │    └── Payroll.php
+resources/views/
+ ├── attendance/
+ ├── employees/
+ ├── departments/
+ ├── payroll/
+ └── layouts/
+routes/web.php
+database/migrations/
+```
+
+---
+
+### 🧾 Export Reports
+
+You can export reports from the attendance or payroll views:
+
+* **PDF Reports:** powered by `barryvdh/laravel-dompdf`
+* **Excel Reports:** powered by `spatie/simple-excel`
+
+---
+
+### 🧑‍💻 Author
+
+**Muhammad Yoga Affella Putra** — Laravel & PHP Developer  
+Passionate about building efficient backend systems and clean web applications.
+
+🌐 [GitHub: @rasakmarsawa](https://github.com/rasakmarsawa)
+📧 [Contact via LinkedIn](www.linkedin.com/in/muhammad-yoga-affella-putra-a64774309)
+
+---
+
+### 📜 License
+
+This project is open-source and available under the **MIT License**.
