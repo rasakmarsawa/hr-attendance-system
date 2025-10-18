@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Payroll;
 use App\Models\Attendance;
+use App\Models\Department;
 
 use Illuminate\Http\Request;
 use Barryvdh\DomPDF\Facade\Pdf;
@@ -12,21 +13,19 @@ class PayrollController extends Controller
 {
     public function index($month, $year)
     {
-        $payrolls = Payroll::select('payrolls.*')
-            ->join('employees', 'employees.id', '=', 'payrolls.employee_id')
-            ->join('departments', 'departments.id', '=', 'employees.department_id')
-            ->where('payrolls.month', $month)
-            ->where('payrolls.year', $year)
-            ->orderBy('departments.name', 'asc')
+        $payrolls = Payroll::where('month', $month)
+            ->where('year', $year)
+            ->orderBy('department_name', 'asc')
             ->with(['employee.user', 'employee.department'])
             ->paginate(10);
 
         return view('payroll.index', compact('payrolls', 'month', 'year'));
     }
 
-    public function edit(payroll $payroll)
+    public function edit(payroll $payroll)    
     {        
-        return view('payroll.edit', compact('payroll'));
+        $departments = Department::orderBy('name')->get();
+        return view('payroll.edit', compact(['payroll','departments']));
     }
 
     public function update(Request $request, payroll $payroll)
@@ -41,6 +40,7 @@ class PayrollController extends Controller
             'total_late'    => 'required|integer|min:0',
             'daily_rate'    => 'required|numeric|min:0',
             'total_pay'     => 'required|numeric|min:0',
+            'department_name' => 'nullable|string|max:255',
         ]);
 
         $payroll->update([
@@ -49,6 +49,7 @@ class PayrollController extends Controller
             'total_late'    => $request->total_late,
             'daily_rate'    => $request->daily_rate,
             'total_pay'     => $request->total_pay,
+            'department_name' => $request->department_name,
         ]);
 
         return redirect()->route('payroll.index', ['month' => $payroll->month, 'year' => $payroll->year])
@@ -57,8 +58,7 @@ class PayrollController extends Controller
 
     public function generate(Request $request, $month, $year)
     {    
-        $attendances = Attendance::with('user.employee')
-            ->whereMonth('date', $month)
+        $attendances = Attendance::whereMonth('date', $month)
             ->whereYear('date', $year)
             ->get()
             ->groupBy('user_id');
@@ -89,6 +89,7 @@ class PayrollController extends Controller
                 'issued_at'    => null,
                 'issued_by'    => null,
                 'payment_datetime' => null,
+                'department_name' => $employee->department ? $employee->department->name : null,
 
             ]);
         }
@@ -164,7 +165,7 @@ class PayrollController extends Controller
         $employee = auth()->user()->employee;
 
         if (!$employee) {
-            return redirect()->back()->with('error', 'No employee record found for your account.');
+            return redirect()->route('dashboard')->with('error', 'Cant Access My Payroll. No employee record found for your account.');
         }
 
         $payrolls = Payroll::where('employee_id', $employee->id)

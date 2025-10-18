@@ -37,7 +37,7 @@ class AttendanceController extends Controller
     {   
         $user = auth()->user();
 
-        if($user->employee->status !== 'active'){
+        if($user->employee == NULL || $user->employee->status != 'active'){
             return redirect()->back()->with('error', 'Your employee status is not active. You cannot check in.');
         }
 
@@ -89,6 +89,7 @@ class AttendanceController extends Controller
 
         $report = $attendances->map(function ($records) {
             return [
+                'user_id' => $records->first()->user_id,
                 'name' => $records->first()->user->name,
                 'present' => $records->where('status', 'present')->count(),
                 'absent' => $records->where('status', 'absent')->count(),
@@ -100,4 +101,15 @@ class AttendanceController extends Controller
         return view('attendance.report', compact('report', 'month', 'year'));
     }
     
+    public function detail($user_id, $month, $year)
+    {
+        $attendances = Attendance::where('user_id', $user_id)
+            ->whereMonth('date', $month)
+            ->whereYear('date', $year)
+            ->get();
+
+        $user = User::findOrFail($user_id);
+
+        return view('attendance.detail', compact('attendances', 'user', 'month', 'year'));
+    }
 }

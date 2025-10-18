@@ -19,6 +19,7 @@ class payroll extends Model
         'issued_by',
         'issued_at',
         'payment_datetime',
+        'department_name',
     ];
 
     protected $casts = [

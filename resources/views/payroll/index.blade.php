@@ -104,7 +104,7 @@
                         @forelse($payrolls as $payroll)
                             <tr>
                                 <td class="px-6 py-4">{{ $payroll->employee->user->name }}</td>                                
-                                <td class="px-6 py-4 text-center">{{ $payroll->employee->department->name }}</td>                
+                                <td class="px-6 py-4 text-center">{{ $payroll->department_name }}</td>                
                                 <td class="px-6 py-4 text-center">Rp {{ number_format($payroll->total_pay, 0, ',', '.') }}</td>
                                 <td class="px-6 py-4 text-center">
                                     @if($payroll->status == 'finalized')

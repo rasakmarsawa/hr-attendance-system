@@ -119,7 +119,7 @@
             </tr>
             <tr>
                 <th>Department</th>
-                <td>{{ $payroll->employee->department->name }}</td>
+                <td>{{ $payroll->department_name ?? '' }}</td>
                 <th>Issued By</th>
                 <td>{{ auth()->user()->name ?? 'HR Department' }}</td>
             </tr>

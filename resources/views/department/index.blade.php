@@ -39,7 +39,6 @@
                     <thead class="bg-gray-50">
                         <tr>
                             <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Name</th>
-                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Manager</th>
                             <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Employees</th>
                             <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Created</th>
                             <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
@@ -50,14 +49,9 @@
                         @forelse($departments as $department)
                             <tr>
                                 <td class="px-6 py-4 text-sm text-gray-900">{{ $department->name }}</td>
-                                <td class="px-6 py-4 text-sm text-gray-500">{{ optional($department->manager)->name ?? '-' }}</td>
                                 <td class="px-6 py-4 text-sm text-gray-500">{{ $department->employees_count ?? $department->users_count ?? $department->employees->count() ?? '-' }}</td>
                                 <td class="px-6 py-4 text-sm text-gray-500">{{ optional($department->created_at)->format('Y-m-d') ?? '-' }}</td>
                                 <td class="px-6 py-4 text-sm text-right space-x-2">
-                                    <a href="{{ route('department.show', $department) }}"
-                                       class="inline-block px-3 py-1 bg-green-600 text-white rounded-lg shadow hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-400">
-                                        Show
-                                    </a>
                                     <a href="{{ route('department.edit', $department) }}"
                                        class="inline-block px-3 py-1 bg-yellow-500 text-white rounded-lg shadow hover:bg-yellow-600 focus:outline-none focus:ring-2 focus:ring-yellow-300">
                                         Edit

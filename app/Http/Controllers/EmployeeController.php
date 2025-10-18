@@ -9,11 +9,6 @@ use Illuminate\Http\Request;
 
 class EmployeeController extends Controller
 {
-    public function index()
-    {
-        
-    }
-
     public function create($user)
     {
         $departments = Department::all();
@@ -36,14 +31,6 @@ class EmployeeController extends Controller
 
         return redirect()->route('user.show', $request->user_id)
                          ->with('success', 'Employee HR data created successfully.');
-    }
-
-    /**
-     * Display the specified resource.
-     */
-    public function show(Employee $employee)
-    {
-        //
     }
 
     public function edit($employee_id)

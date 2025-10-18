@@ -32,7 +32,28 @@
                 </div>                  
 
                 
-                    
+                {{-- Department --}}
+                <div>
+                    <label for="department_id" class="block text-sm font-medium text-gray-700">Department</label>
+                    <div class="mt-1">
+                        <select
+                            name="department_name"
+                            id="department_name"
+                            required
+                            class="block w-full rounded-md border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                        >
+                            <option value="">-- Select Department --</option>
+                            @foreach ($departments as $department)
+                                <option value="{{ $department->name }}" {{ old('department_name', $payroll->department_name) == $department->name ? 'selected' : '' }}>
+                                    {{ $department->name }}
+                                </option>
+                            @endforeach
+                        </select>
+                    </div>
+                    @error('department_id')
+                        <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                    @enderror
+                </div>                    
 
                 {{-- Total Present --}}
                 <div>

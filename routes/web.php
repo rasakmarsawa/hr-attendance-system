@@ -16,10 +16,10 @@ Route::middleware(['auth','role:Admin'])->group(function () {
     Route::resource('user', App\Http\Controllers\UserController::class)->except('edit','update');
 
     //department routes
-    Route::resource('department', App\Http\Controllers\DepartmentController::class);
+    Route::resource('department', App\Http\Controllers\DepartmentController::class)->except('show');
 
     //employee routes
-    Route::resource('employee', App\Http\Controllers\EmployeeController::class)->except('create');
+    Route::resource('employee', App\Http\Controllers\EmployeeController::class)->except('create')->except('index', 'show');
     Route::get('/employee/create/{user}', [App\Http\Controllers\EmployeeController::class, 'create'])->name('employee.create');
 
     //attendance routes
@@ -27,6 +27,7 @@ Route::middleware(['auth','role:Admin'])->group(function () {
     Route::post('/attendance/pre-fill', [App\Http\Controllers\AttendanceController::class, 'store'])->name('attendance.store');
     Route::get('/attendance/report', [App\Http\Controllers\AttendanceController::class, 'report'])->name('attendance.report');
     Route::get('/attendance/export', App\Http\Controllers\AttendanceExportController::class)->name('attendance.export');
+    Route::get('/attendance/detail/{user_id}/{month}/{year}', [App\Http\Controllers\AttendanceController::class, 'detail'])->name('attendance.detail');
 
     //payroll routes
     Route::resource('payroll', App\Http\Controllers\PayrollController::class)->only(['edit', 'update', 'destroy']);

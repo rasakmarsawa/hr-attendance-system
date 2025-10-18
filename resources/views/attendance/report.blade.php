@@ -6,6 +6,7 @@
     </x-slot>
 
     <div class="max-w-6xl mx-auto py-6 sm:px-6 lg:px-8">
+        {{-- Filter Form --}}
         <form method="GET" class="mb-4 flex gap-2">
             <select name="month" class="border rounded p-2">
                 @foreach(range(1,12) as $m)
@@ -29,10 +30,11 @@
 
             <a href="{{ route('attendance.export', ['month' => $month, 'year' => $year]) }}"
                 class="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700 flex items-center">
-                    Export to Excel
-                </a>            
+                Export to Excel
+            </a>            
         </form>
 
+        {{-- Attendance Table --}}
         <div class="bg-white shadow rounded-lg overflow-hidden">
             <table class="min-w-full text-sm">
                 <thead class="bg-gray-100">
@@ -42,6 +44,7 @@
                         <th class="px-4 py-2 text-center">Absent</th>
                         <th class="px-4 py-2 text-center">Late</th>
                         <th class="px-4 py-2 text-center">Total Days</th>
+                        <th class="px-4 py-2 text-center">Actions</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -52,10 +55,18 @@
                             <td class="px-4 py-2 text-center">{{ $row['absent'] }}</td>
                             <td class="px-4 py-2 text-center">{{ $row['late'] }}</td>
                             <td class="px-4 py-2 text-center">{{ $row['total_days'] }}</td>
+                            <td class="px-4 py-2 text-center">
+                                <a href="{{ route('attendance.detail', ['user_id' => $row['user_id'], 'month' => $month, 'year' => $year]) }}"
+                                   class="bg-indigo-600 text-white px-3 py-1 rounded hover:bg-indigo-700 text-xs">
+                                    Detail
+                                </a>
+                            </td>
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="5" class="px-4 py-3 text-center text-gray-500">No attendance data found.</td>
+                            <td colspan="6" class="px-4 py-3 text-center text-gray-500">
+                                No attendance data found.
+                            </td>
                         </tr>
                     @endforelse
                 </tbody>
@@ -63,3 +74,4 @@
         </div>
     </div>
 </x-app-layout>
+    
