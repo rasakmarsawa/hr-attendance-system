@@ -1,0 +1,24 @@
+# Ignore environment & git
+.env
+.git
+.gitignore
+
+# Ignore dependencies (install inside image)
+node_modules
+vendor
+
+# Ignore runtime data but keep folder structure
+storage/*.key
+storage/*.log
+storage/framework/sessions/*
+storage/framework/views/*
+storage/framework/cache/data/*
+storage/logs/*
+
+# Ignore tests and docs
+tests
+README.md
+
+# Ignore Docker build files
+docker-compose.yml
+Dockerfile
