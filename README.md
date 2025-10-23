@@ -121,6 +121,122 @@ Visit: **[http://127.0.0.1:8000](http://127.0.0.1:8000)**
 
 ---
 
+Perfect 👌 — since your `entrypoint.sh` already handles migrations and starts PHP-FPM automatically, we’ll reflect that and include a clear **container architecture** section.
+
+Here’s your revised and complete `README.md` Docker documentation (ready to commit):
+
+---
+
+### 🐳 Dockerized Laravel + Nginx + MySQL Setup
+
+This project runs a Laravel application inside a Docker environment with Nginx, PHP-FPM, and MySQL.
+The stack is fully automated — migrations run on startup and the PHP service starts automatically through the custom entrypoint script.
+
+---
+
+#### ⚙️ 1. Prerequisites
+
+Make sure the following are installed on your machine:
+
+* [Docker Engine](https://docs.docker.com/engine/install/)
+* [Docker Compose](https://docs.docker.com/compose/install/)
+
+---
+
+#### ⚡ 2. Setup & Run
+
+Copy environment file:
+
+```bash
+cp .env.example .env
+```
+
+Adjust `.env` as needed (database name, username, password, etc.).
+
+Then build and start everything:
+
+```bash
+sudo docker compose up -d --build
+```
+
+That’s it — migrations will automatically run on container startup.
+
+---
+
+#### 🌐 3. Access Points
+
+| Service     | URL / Host                                     | Notes                               |
+| ----------- | ---------------------------------------------- | ----------------------------------- |
+| Laravel App | [http://localhost:8000](http://localhost:8000) | Served via Nginx                    |
+| MySQL DB    | `localhost:3307`                               | Connect using credentials in `.env` |
+| PHP-FPM     | Internal only (`app` container)                | Handles PHP execution               |
+
+---
+
+#### 🧩 4. Container Architecture
+
+```
++--------------------------+
+|        nginx             |
+|  (Port 8000 → 80 inside) |
+|  → serves static files   |
+|  → forwards PHP requests |
+|    to app:9000 (PHP-FPM) |
++-----------▲--------------+
+            |
+            ▼
++--------------------------+
+|          app             |
+|  Laravel + PHP-FPM       |
+|  Entrypoint:             |
+|   • Wait for MySQL       |
+|   • Run migrations       |
+|   • Start PHP-FPM        |
+|  Code mounted at /var/www|
++-----------▲--------------+
+            |
+            ▼
++--------------------------+
+|          db              |
+|  MySQL database          |
+|  Persists data via       |
+|  named volume `db_data`  |
++--------------------------+
+```
+
+---
+
+#### 🧰 5. Useful Commands
+
+**Rebuild containers (without cache):**
+
+```bash
+sudo docker compose build --no-cache
+```
+
+**Check logs (follow mode):**
+
+```bash
+sudo docker compose logs -f
+```
+
+**Stop and remove containers + volumes:**
+
+```bash
+sudo docker compose down -v
+```
+
+---
+
+#### 📄 6. Notes
+
+* The app runs migrations automatically on startup via `docker-entrypoint.sh`.
+* Nginx serves the Laravel app using PHP-FPM.
+* Data is persistent between rebuilds using Docker volumes.
+* SSL setup (Let's Encrypt / Certbot) can be added later once deployment is confirmed stable.
+
+---
+
 ### 🔐 Default Access (from Seeder)
 
 | Role     | Email                                               | Password |
