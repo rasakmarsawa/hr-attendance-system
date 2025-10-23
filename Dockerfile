@@ -12,6 +12,7 @@ RUN apt-get update && apt-get install -y \
     libonig-dev \
     libxml2-dev \
     default-mysql-client \
+    netcat-traditional \
     && docker-php-ext-install pdo_mysql zip
 
 # Install Composer
@@ -31,7 +32,6 @@ COPY docker-entrypoint.sh /usr/local/bin/docker-entrypoint.sh
 RUN chmod +x /usr/local/bin/docker-entrypoint.sh
 
 # Expose port
-EXPOSE 8000
-
-# Run entrypoint via shell
+EXPOSE 9000
 ENTRYPOINT ["sh", "/usr/local/bin/docker-entrypoint.sh"]
+
