@@ -13,7 +13,7 @@ class DashboardTest extends TestCase
     use RefreshDatabase;
 
     #[Test]
-    public function authenticated_user_can_access_dashboard(): void
+    public function authenticated_user_can_access_dashboard(): void    
     {
         $role = Role::create([
             'name' => 'Admin',
