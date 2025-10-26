@@ -19,7 +19,7 @@ Route::middleware(['auth','role:Admin'])->group(function () {
     Route::resource('department', App\Http\Controllers\DepartmentController::class)->except('show');
 
     //employee routes
-    Route::resource('employee', App\Http\Controllers\EmployeeController::class)->except('create')->except('index', 'show');
+    Route::resource('employee', App\Http\Controllers\EmployeeController::class)->except('create')->except('index', 'show', 'create');
     Route::get('/employee/create/{user}', [App\Http\Controllers\EmployeeController::class, 'create'])->name('employee.create');
 
     //attendance routes
