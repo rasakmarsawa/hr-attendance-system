@@ -79,7 +79,7 @@ jobs:
           QUEUE_CONNECTION: sync
         run: php artisan migrate:fresh --seed --force
 
-      - name: Run tests
+      - name: Run tests (verbose)
         env:
           DB_CONNECTION: mysql
           DB_HOST: 127.0.0.1
@@ -92,4 +92,4 @@ jobs:
           SESSION_DRIVER: array
           CACHE_DRIVER: array
           QUEUE_CONNECTION: sync
-        run: php artisan test --env=testing --verbose
+        run: vendor/bin/phpunit --configuration phpunit.xml --verbose
