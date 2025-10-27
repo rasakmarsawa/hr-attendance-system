@@ -44,6 +44,13 @@ jobs:
       - name: Generate application key
         run: php artisan key:generate
 
+      - name: Create storage directories
+        run: |
+          mkdir -p storage/framework/views
+          mkdir -p storage/framework/cache
+          mkdir -p storage/logs
+          mkdir -p bootstrap/cache
+
       - name: Wait for MySQL to be ready
         run: |
           for i in {1..30}; do
@@ -65,6 +72,11 @@ jobs:
           DB_DATABASE: hras
           DB_USERNAME: root
           DB_PASSWORD: ""
+          APP_ENV: testing
+          APP_DEBUG: 1
+          SESSION_DRIVER: array
+          CACHE_DRIVER: array
+          QUEUE_CONNECTION: sync
         run: php artisan migrate:fresh --seed --force
 
       - name: Run tests
@@ -75,4 +87,9 @@ jobs:
           DB_DATABASE: hras
           DB_USERNAME: root
           DB_PASSWORD: ""
-        run: php artisan test --env=testing
+          APP_ENV: testing
+          APP_DEBUG: 1
+          SESSION_DRIVER: array
+          CACHE_DRIVER: array
+          QUEUE_CONNECTION: sync
+        run: php artisan test --env=testing --verbose
