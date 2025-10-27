@@ -44,6 +44,13 @@ jobs:
       - name: Generate application key
         run: php artisan key:generate
 
+      - name: Wait for MySQL to be ready
+        run: |
+            until mysqladmin ping -h mysql --silent; do
+            echo "Waiting for MySQL..."
+            sleep 5
+            done        
+
       - name: Run migrations
         env:
             DB_CONNECTION: mysql
