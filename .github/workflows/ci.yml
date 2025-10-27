@@ -38,7 +38,7 @@ jobs:
       - name: Copy .env
         run: cp .env.example .env
 
-      - name: Install dependencies
+      - name: Install PHP dependencies
         run: composer install --no-progress --prefer-dist --optimize-autoloader
 
       - name: Generate application key
@@ -79,18 +79,28 @@ jobs:
           QUEUE_CONNECTION: sync
         run: php artisan migrate:fresh --seed --force
 
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 20
+
+      - name: Install Node dependencies
+        run: npm install
+
+      - name: Build frontend assets
+        run: npm run build
+
       - name: Run tests (debug)
         env:
-            DB_CONNECTION: mysql
-            DB_HOST: 127.0.0.1
-            DB_PORT: 3306
-            DB_DATABASE: hras
-            DB_USERNAME: root
-            DB_PASSWORD: ""
-            APP_ENV: testing
-            APP_DEBUG: 1
-            SESSION_DRIVER: array
-            CACHE_DRIVER: array
-            QUEUE_CONNECTION: sync
+          DB_CONNECTION: mysql
+          DB_HOST: 127.0.0.1
+          DB_PORT: 3306
+          DB_DATABASE: hras
+          DB_USERNAME: root
+          DB_PASSWORD: ""
+          APP_ENV: testing
+          APP_DEBUG: 1
+          SESSION_DRIVER: array
+          CACHE_DRIVER: array
+          QUEUE_CONNECTION: sync
         run: vendor/bin/phpunit --configuration phpunit.xml --debug
-
