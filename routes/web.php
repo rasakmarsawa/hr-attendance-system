@@ -30,7 +30,7 @@ Route::middleware(['auth','role:Admin'])->group(function () {
     Route::get('/attendance/detail/{user_id}/{month}/{year}', [App\Http\Controllers\AttendanceController::class, 'detail'])->name('attendance.detail');
 
     //payroll routes
-    Route::resource('payroll', App\Http\Controllers\PayrollController::class)->only(['edit', 'update', 'destroy']);
+    Route::resource('payroll', App\Http\Controllers\PayrollController::class)->only(['edit', 'update']);
     Route::get('/payroll/index/{month}/{year}', [App\Http\Controllers\PayrollController::class, 'index'])->name('payroll.index');
     
     //bulk routes

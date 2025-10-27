@@ -68,11 +68,14 @@ class PayrollController extends Controller
             if (!$employee) {
                 continue; // Skip if no associated employee
             }
-                
-            $total_present = $records->where('status', 'present')->count();
-            $total_absent  = $records->where('status', 'absent')->count();
-            $total_late    = $records->where('status', 'late')->count();
-            $total_pay     = $employee->daily_rate * ($total_present+$total_late);
+
+            $counts = [
+                'present' => $records->where('status', 'present')->count(),
+                'absent'  => $records->where('status', 'absent')->count(),
+                'late'    => $records->where('status', 'late')->count(),
+            ];      
+            
+            $total_pay = $this->calculatePayroll($employee->daily_rate, $counts);                
 
             Payroll::updateOrCreate([
                 'employee_id'   => $employee->id,
@@ -80,9 +83,9 @@ class PayrollController extends Controller
                 'year'          => $year,
             ],
             [                
-                'total_present' => $total_present,
-                'total_absent'  => $total_absent,
-                'total_late'    => $total_late,
+                'total_present' => $counts['present'],
+                'total_absent'  => $counts['absent'],
+                'total_late'    => $counts['late'],
                 'daily_rate'    => $employee->daily_rate,
                 'total_pay'     => $total_pay,
                 'status'        => 'draft',
@@ -176,4 +179,10 @@ class PayrollController extends Controller
 
         return view('payroll.my_payroll', compact('payrolls'));
     }
+
+    private function calculatePayroll(float $dailyRate, array $counts): float
+    {
+        return $dailyRate * ($counts['present'] + $counts['late']);
+    }
+
 }
