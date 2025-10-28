@@ -5,13 +5,14 @@ FROM php:8.3-fpm
 WORKDIR /var/www
 
 # Install system dependencies
-RUN apt-get update && apt-get install -y \
+RUN apt-get update && apt-get install -y --no-install-recommends \
     git \
     unzip \
     libzip-dev \
     libonig-dev \
     libxml2-dev \
     default-mysql-client \
+    libpq-dev \
     netcat-traditional \
     && docker-php-ext-install pdo_pgsql pdo_mysql zip
 
@@ -21,6 +22,7 @@ COPY --from=composer:2.6 /usr/bin/composer /usr/bin/composer
 # Copy app files
 COPY . .
 
+# Create storage and bootstrap/cache directories
 RUN mkdir -p bootstrap/cache storage && \
     chmod -R 775 bootstrap/cache storage
 
@@ -31,7 +33,8 @@ RUN composer install --no-dev --optimize-autoloader
 COPY docker-entrypoint.sh /usr/local/bin/docker-entrypoint.sh
 RUN chmod +x /usr/local/bin/docker-entrypoint.sh
 
-# Expose port
+# Expose port 9000 (FPM)
 EXPOSE 9000
-ENTRYPOINT ["sh", "/usr/local/bin/docker-entrypoint.sh"]
 
+# Set entrypoint
+ENTRYPOINT ["sh", "/usr/local/bin/docker-entrypoint.sh"]
