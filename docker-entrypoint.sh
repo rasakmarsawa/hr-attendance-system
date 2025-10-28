@@ -12,7 +12,7 @@ echo "Database is ready."
 # --- Fix Laravel storage & cache permissions ---
 echo "Fixing Laravel storage permissions..."
 mkdir -p bootstrap/cache storage/framework/{views,sessions,cache} storage/logs
-chown -R www-data:www-data bootstrap/cache storage
+# Only chmod, do NOT chown (Render containers are non-root)
 chmod -R 775 bootstrap/cache storage
 
 # --- Run Laravel migrations & seeders ---
