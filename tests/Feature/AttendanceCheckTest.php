@@ -49,6 +49,7 @@ class AttendanceCheckTest extends TestCase
         ]);
 
         $this->assertTrue(false);
+        $this->assertTrue(false);
     }
 
     #[\PHPUnit\Framework\Attributes\Test]
