@@ -14,12 +14,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     default-mysql-client \
     libpq-dev \
     netcat-traditional \
-    curl \
-    zip \
-    && rm -rf /var/lib/apt/lists/*
-
-# Install PHP extensions
-RUN docker-php-ext-install pdo_mysql pdo_pgsql zip
+    && docker-php-ext-install pdo_pgsql pdo_mysql zip
 
 # Install Composer
 COPY --from=composer:2.6 /usr/bin/composer /usr/bin/composer
