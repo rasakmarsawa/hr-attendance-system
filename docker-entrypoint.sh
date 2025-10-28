@@ -10,4 +10,7 @@ echo "MySQL is ready. Running migrations..."
 php artisan migrate:fresh --seed
 
 echo "Starting Laravel..."
-php-fpm
+
+php-fpm &
+
+nginx -g "daemon off;"
