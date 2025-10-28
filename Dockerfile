@@ -21,6 +21,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 
 # Install PHP extensions
 RUN docker-php-ext-install pdo_mysql pdo_pgsql zip
+    && docker-php-ext-install pdo_pgsql pdo_mysql zip
 
 # Install Composer
 COPY --from=composer:2.6 /usr/bin/composer /usr/bin/composer
@@ -42,7 +43,7 @@ COPY docker/nginx/default.conf /etc/nginx/sites-available/default
 COPY docker-entrypoint.sh /usr/local/bin/docker-entrypoint.sh
 RUN chmod +x /usr/local/bin/docker-entrypoint.sh
 
-# Expose port
+# Expose port 9000 (FPM)
 EXPOSE 9000
 
 # Set entrypoint
