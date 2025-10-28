@@ -17,6 +17,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     netcat-traditional \
     curl \
     zip \
+    gettext \    
     && rm -rf /var/lib/apt/lists/*
 
 # Install PHP extensions
