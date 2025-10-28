@@ -26,12 +26,13 @@ RUN docker-php-ext-install pdo_mysql pdo_pgsql zip
 # Install Composer
 COPY --from=composer:2.6 /usr/bin/composer /usr/bin/composer
 
-# Copy application files
+# Copy app files
 COPY . .
 
-# Ensure Laravel directories exist and have correct permissions at build time
-RUN mkdir -p bootstrap/cache storage/framework/{views,sessions,cache} storage/logs && \
-    chmod -R 775 bootstrap/cache storage
+# Set writable permissions for Laravel directories at build time
+# 0777 is safe because Render runs as non-root user
+RUN mkdir -p bootstrap/cache storage && \
+    chmod -R 0777 bootstrap/cache storage
 
 # Install PHP dependencies
 RUN composer install --no-dev --optimize-autoloader
@@ -43,7 +44,7 @@ COPY docker/nginx/default.conf /etc/nginx/sites-available/default
 COPY docker-entrypoint.sh /usr/local/bin/docker-entrypoint.sh
 RUN chmod +x /usr/local/bin/docker-entrypoint.sh
 
-# Expose port 9000 for PHP-FPM
+# Expose port 9000 (PHP-FPM)
 EXPOSE 9000
 
 # Entrypoint
