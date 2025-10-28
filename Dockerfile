@@ -4,7 +4,7 @@ FROM php:8.3-fpm
 # Set working directory
 WORKDIR /var/www
 
-# Install system dependencies
+# Install system dependencies, including envsubst (gettext)
 RUN apt-get update && apt-get install -y --no-install-recommends \
     nginx \
     git \
@@ -17,7 +17,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     netcat-traditional \
     curl \
     zip \
-    gettext \    
+    gettext \
     && rm -rf /var/lib/apt/lists/*
 
 # Install PHP extensions
@@ -29,7 +29,7 @@ COPY --from=composer:2.6 /usr/bin/composer /usr/bin/composer
 # Copy app files
 COPY . .
 
-# Set permissions
+# Set permissions for Laravel
 RUN mkdir -p bootstrap/cache storage && \
     chmod -R 775 bootstrap/cache storage
 
@@ -43,8 +43,8 @@ COPY docker/nginx/default.conf /etc/nginx/sites-available/default
 COPY docker-entrypoint.sh /usr/local/bin/docker-entrypoint.sh
 RUN chmod +x /usr/local/bin/docker-entrypoint.sh
 
-# Expose port
+# Expose port 9000 (PHP-FPM)
 EXPOSE 9000
 
-# Set entrypoint
+# Entrypoint
 ENTRYPOINT ["sh", "/usr/local/bin/docker-entrypoint.sh"]
