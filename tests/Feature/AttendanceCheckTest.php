@@ -46,7 +46,7 @@ class AttendanceCheckTest extends TestCase
         $this->assertDatabaseHas('attendances', [
             'user_id' => $user->id,
             'date' => now()->toDateString()
-        ]);
+        ]);        
     }
 
     #[\PHPUnit\Framework\Attributes\Test]
