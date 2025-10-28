@@ -29,9 +29,10 @@ COPY --from=composer:2.6 /usr/bin/composer /usr/bin/composer
 # Copy app files
 COPY . .
 
-# Set permissions for Laravel
-RUN mkdir -p bootstrap/cache storage && \
-    chmod -R 775 bootstrap/cache storage
+# Set Laravel storage & cache permissions
+RUN mkdir -p bootstrap/cache storage/framework/{views,sessions,cache} storage/logs && \
+    chmod -R 775 bootstrap/cache storage && \
+    chown -R www-data:www-data bootstrap/cache storage
 
 # Install PHP dependencies
 RUN composer install --no-dev --optimize-autoloader
@@ -45,6 +46,9 @@ RUN chmod +x /usr/local/bin/docker-entrypoint.sh
 
 # Expose port 9000 (PHP-FPM)
 EXPOSE 9000
+
+# Use non-root user for PHP-FPM
+USER www-data
 
 # Entrypoint
 ENTRYPOINT ["sh", "/usr/local/bin/docker-entrypoint.sh"]
