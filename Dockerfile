@@ -4,7 +4,7 @@ FROM php:8.3-fpm
 # Set working directory
 WORKDIR /var/www
 
-# Install system dependencies, including envsubst (gettext)
+# Install system dependencies, including envsubst
 RUN apt-get update && apt-get install -y --no-install-recommends \
     nginx \
     git \
@@ -26,13 +26,12 @@ RUN docker-php-ext-install pdo_mysql pdo_pgsql zip
 # Install Composer
 COPY --from=composer:2.6 /usr/bin/composer /usr/bin/composer
 
-# Copy app files
+# Copy application files
 COPY . .
 
-# Set Laravel storage & cache permissions
+# Ensure Laravel directories exist and have correct permissions at build time
 RUN mkdir -p bootstrap/cache storage/framework/{views,sessions,cache} storage/logs && \
-    chmod -R 775 bootstrap/cache storage && \
-    chown -R www-data:www-data bootstrap/cache storage
+    chmod -R 775 bootstrap/cache storage
 
 # Install PHP dependencies
 RUN composer install --no-dev --optimize-autoloader
@@ -44,11 +43,8 @@ COPY docker/nginx/default.conf /etc/nginx/sites-available/default
 COPY docker-entrypoint.sh /usr/local/bin/docker-entrypoint.sh
 RUN chmod +x /usr/local/bin/docker-entrypoint.sh
 
-# Expose port 9000 (PHP-FPM)
+# Expose port 9000 for PHP-FPM
 EXPOSE 9000
-
-# Use non-root user for PHP-FPM
-USER www-data
 
 # Entrypoint
 ENTRYPOINT ["sh", "/usr/local/bin/docker-entrypoint.sh"]

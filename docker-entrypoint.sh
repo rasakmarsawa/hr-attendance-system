@@ -9,12 +9,6 @@ while ! nc -z "$DB_HOST" "$DB_PORT"; do
 done
 echo "Database is ready."
 
-# --- Fix Laravel storage & cache permissions ---
-echo "Fixing Laravel storage permissions..."
-mkdir -p bootstrap/cache storage/framework/{views,sessions,cache} storage/logs
-# Only chmod, do NOT chown (Render containers are non-root)
-chmod -R 775 bootstrap/cache storage
-
 # --- Run Laravel migrations & seeders ---
 echo "Running Laravel migrations & seeders..."
 php artisan migrate:fresh --seed --force
@@ -33,9 +27,9 @@ fi
 echo "Starting PHP-FPM..."
 php-fpm &
 
-# Wait a moment to let PHP-FPM fully start
+# Wait a moment to ensure PHP-FPM is ready
 sleep 2
 
 # --- Start Nginx in foreground ---
 echo "Starting Nginx..."
-exec nginx -g "daemon off;"
+nginx -g "daemon off;"
