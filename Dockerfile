@@ -18,6 +18,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     curl \
     zip \
     gettext \
+    gnupg2 \
     && rm -rf /var/lib/apt/lists/*
 
 # Install PHP extensions
@@ -26,16 +27,22 @@ RUN docker-php-ext-install pdo_mysql pdo_pgsql zip
 # Install Composer
 COPY --from=composer:2.6 /usr/bin/composer /usr/bin/composer
 
+# Install Node.js (LTS) & npm
+RUN curl -fsSL https://deb.nodesource.com/setup_lts.x | bash - && \
+    apt-get install -y nodejs
+
 # Copy app files
 COPY . .
 
-# Set writable permissions for Laravel directories at build time
-# 0777 is safe because Render runs as non-root user
+# Set writable permissions for Laravel directories
 RUN mkdir -p bootstrap/cache storage && \
     chmod -R 0777 bootstrap/cache storage
 
 # Install PHP dependencies
 RUN composer install --no-dev --optimize-autoloader
+
+# Install JS dependencies and build Vite assets
+RUN npm install && npm run build
 
 # Copy Nginx config
 COPY docker/nginx/default.conf /etc/nginx/sites-available/default
