@@ -11,13 +11,13 @@ class ForceHttps
 {
     public function handle(Request $request, Closure $next)
     {
-        // Trust Render's proxy headers (X-Forwarded-Proto, etc.)
-        $request->setTrustedProxies(
+        // Trust proxy headers for HTTPS
+        Request::setTrustedProxies(
             [$request->getClientIp()],
-            SymfonyRequest::HEADER_X_FORWARDED_ALL
+            SymfonyRequest::HEADER_X_FORWARDED_PROTO | SymfonyRequest::HEADER_X_FORWARDED_HOST
         );
 
-        // Force HTTPS scheme only in production
+        // Force HTTPS only in production
         if (app()->environment('production')) {
             URL::forceScheme('https');
         }
