@@ -6,8 +6,9 @@ FROM php:8.3-fpm AS build
 # Set working directory
 WORKDIR /var/www
 
-# Install system dependencies (including Node.js & npm for Vite)
+# Install system dependencies
 RUN apt-get update && apt-get install -y --no-install-recommends \
+    nginx \
     git \
     unzip \
     libzip-dev \
@@ -19,8 +20,14 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     curl \
     zip \
     gettext \
-    nodejs \
-    npm \
+    gnupg \
+    ca-certificates \
+    && rm -rf /var/lib/apt/lists/*
+
+# Install Node.js 20.x (or latest LTS)
+RUN curl -fsSL https://deb.nodesource.com/setup_20.x | bash - \
+    && apt-get install -y nodejs \
+    && npm install -g npm@latest \
     && rm -rf /var/lib/apt/lists/*
 
 # Install PHP extensions
