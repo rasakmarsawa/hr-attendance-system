@@ -3,12 +3,10 @@
 # -------------------------------
 FROM php:8.3-fpm AS build
 
-# Set working directory
 WORKDIR /var/www
 
-# Install system dependencies
+# Install system dependencies for build
 RUN apt-get update && apt-get install -y --no-install-recommends \
-    nginx \
     git \
     unzip \
     libzip-dev \
@@ -16,15 +14,14 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     libxml2-dev \
     default-mysql-client \
     libpq-dev \
-    netcat \
     curl \
     zip \
-    gettext \
     gnupg \
     ca-certificates \
+    netcat-traditional \
     && rm -rf /var/lib/apt/lists/*
 
-# Install Node.js 20.x (or latest LTS)
+# Install Node.js 20.x
 RUN curl -fsSL https://deb.nodesource.com/setup_20.x | bash - \
     && apt-get install -y nodejs \
     && npm install -g npm@latest \
@@ -36,22 +33,15 @@ RUN docker-php-ext-install pdo_mysql pdo_pgsql zip
 # Install Composer
 COPY --from=composer:2.6 /usr/bin/composer /usr/bin/composer
 
-# Copy Laravel app files
+# Copy app
 COPY . .
-
-# Set permissions for Laravel storage & cache directories
-RUN mkdir -p bootstrap/cache storage && \
-    chmod -R 775 bootstrap/cache storage
 
 # Install PHP dependencies
 RUN composer install --no-dev --optimize-autoloader
 
-# Install frontend dependencies & build assets
+# Build frontend assets
 RUN npm install
 RUN npm run build
-
-# Set proper permissions for public/build
-RUN chown -R www-data:www-data public/build
 
 # -------------------------------
 # Stage 1: Production
@@ -60,15 +50,20 @@ FROM php:8.3-fpm
 
 WORKDIR /var/www
 
-# Copy PHP app & vendor from build stage
+# Copy everything from build stage
 COPY --from=build /var/www /var/www
 
-# Install system dependencies for Nginx
+# Install runtime dependencies
 RUN apt-get update && apt-get install -y --no-install-recommends \
     nginx \
     curl \
+    netcat-traditional \
     gettext \
     && rm -rf /var/lib/apt/lists/*
+
+# Set proper permissions for Laravel
+RUN mkdir -p storage/framework/{views,sessions,cache} bootstrap/cache && \
+    chmod -R 775 storage bootstrap/cache
 
 # Copy Nginx config
 COPY docker/nginx/default.conf /etc/nginx/sites-available/default
@@ -80,5 +75,4 @@ RUN chmod +x /usr/local/bin/docker-entrypoint.sh
 # Expose PHP-FPM port
 EXPOSE 9000
 
-# Set entrypoint
 ENTRYPOINT ["sh", "/usr/local/bin/docker-entrypoint.sh"]
