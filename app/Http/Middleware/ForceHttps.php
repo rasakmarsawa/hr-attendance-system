@@ -5,19 +5,20 @@ namespace App\Http\Middleware;
 use Closure;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\URL;
+use Symfony\Component\HttpFoundation\Request as SymfonyRequest;
 
 class ForceHttps
 {
     public function handle(Request $request, Closure $next)
     {
-        // Trust Render's proxy headers
+        // Trust Render's proxy headers (X-Forwarded-Proto, etc.)
         $request->setTrustedProxies(
             [$request->getClientIp()],
-            Request::HEADER_X_FORWARDED_ALL
+            SymfonyRequest::HEADER_X_FORWARDED_ALL
         );
 
-        // Force HTTPS only in production
-        if (env('APP_ENV') === 'production') {
+        // Force HTTPS scheme only in production
+        if (app()->environment('production')) {
             URL::forceScheme('https');
         }
 
