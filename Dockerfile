@@ -56,14 +56,13 @@ WORKDIR /var/www
 # Copy everything from build stage
 COPY --from=build /var/www /var/www
 
-# Install runtime dependencies
+# Install runtime dependencies (no need to rebuild PHP extensions)
 RUN apt-get update && apt-get install -y --no-install-recommends \
     nginx \
     curl \
     netcat-traditional \
     gettext \
-    libpq-dev \
-    && docker-php-ext-install pdo_pgsql pdo_mysql zip \
+    libpq5 \
     && rm -rf /var/lib/apt/lists/*
 
 # Set proper permissions for Laravel directories
