@@ -43,6 +43,9 @@ RUN composer install --no-dev --optimize-autoloader
 RUN npm install
 RUN npm run build
 
+# Set ownership for public/build
+RUN chown -R www-data:www-data public/build
+
 # -------------------------------
 # Stage 1: Production
 # -------------------------------
@@ -59,11 +62,13 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     curl \
     netcat-traditional \
     gettext \
+    libpq-dev \
+    && docker-php-ext-install pdo_pgsql pdo_mysql zip \
     && rm -rf /var/lib/apt/lists/*
 
-# Set proper permissions for Laravel
-RUN mkdir -p storage/framework/{views,sessions,cache} bootstrap/cache && \
-    chmod -R 775 storage bootstrap/cache
+# Set proper permissions for Laravel directories
+RUN mkdir -p storage/framework/{views,sessions,cache} bootstrap/cache public/build && \
+    chown -R www-data:www-data storage bootstrap/cache public/build
 
 # Copy Nginx config
 COPY docker/nginx/default.conf /etc/nginx/sites-available/default
