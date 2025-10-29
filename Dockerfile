@@ -33,14 +33,19 @@ RUN docker-php-ext-install pdo_mysql pdo_pgsql zip
 # Install Composer
 COPY --from=composer:2.6 /usr/bin/composer /usr/bin/composer
 
-# Copy app
+# Copy only package files first to leverage caching
+COPY package*.json ./
+
+# Install frontend dependencies
+RUN npm install
+
+# Copy the rest of the application
 COPY . .
 
 # Install PHP dependencies
 RUN composer install --no-dev --optimize-autoloader
 
 # Build frontend assets
-RUN npm install
 RUN npm run build
 
 # Set ownership for public/build
