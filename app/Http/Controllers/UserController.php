@@ -75,6 +75,10 @@ class UserController extends Controller
 
     public function destroy(string $id)
     {
+        if($user->email === "admin@example.com"){
+            return back()->with('error', 'cannot delete the demo admin account');
+        }
+
         $user = User::findOrFail($id);
         $user->delete();
 

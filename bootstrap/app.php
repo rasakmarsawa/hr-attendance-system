@@ -19,6 +19,13 @@ return Application::configure(basePath: dirname(__DIR__))
             'role' => App\Http\Middleware\RoleMiddleware::class,
         ]);
     })
+    ->withSchedule(function (Schedule $schedule) {
+        // if (app()->environment('production')) {
+        //         return;
+        //     }
+
+        $schedule->command('migrate:fresh --seed')->dailyAt('03:00');
+    })    
     ->withExceptions(function (Exceptions $exceptions): void {
         //
     })->create();
