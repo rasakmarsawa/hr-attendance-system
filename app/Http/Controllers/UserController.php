@@ -77,7 +77,7 @@ class UserController extends Controller
     {
         $user = User::findOrFail($id);
         if($user->email === "admin@example.com"){
-            return back()->with('error', 'cannot delete the demo admin account');
+            return redirect()->route('user.index')->with('error', 'cannot delete the demo admin account');
         }
 
         $user->delete();
