@@ -5,7 +5,7 @@
         </h2>
     </x-slot>
 
-    <div class="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8 px-4">
+    <div class="py-6 px-4 sm:px-6 lg:px-8">
 
         {{-- Success / Error Messages --}}
         @if(session('success'))
@@ -18,8 +18,6 @@
                 {{ session('error') }}
             </div>
         @endif                    
-        </div>
-
 
         {{-- Payroll Table --}}
         <div class="bg-white shadow rounded-lg overflow-hidden">
@@ -27,42 +25,99 @@
                 <table class="min-w-full divide-y divide-gray-200">
                     <thead class="bg-gray-50">
                         <tr>
-                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Employee</th>
-                            <th class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Department</th>
-                            <th class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Total Pay</th>
-                            <th class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Period</th>
-                            <th class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Payment</th>
-                            <th class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+                            {{-- Employee column (desktop only) --}}
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider hidden sm:table-cell">
+                                Employee
+                            </th>
+
+                            {{-- Desktop: other columns --}}
+                            <th class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider hidden sm:table-cell">
+                                Department
+                            </th>
+                            <th class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider hidden sm:table-cell">
+                                Total Pay
+                            </th>
+
+                            {{-- Period column is key column (always visible) --}}
+                            <th class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                Period
+                            </th>
+
+                            <th class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider hidden sm:table-cell">
+                                Payment
+                            </th>
+                            <th class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                Actions
+                            </th>
                         </tr>
                     </thead>
                     <tbody class="bg-white divide-y divide-gray-200">
                         @forelse($payrolls as $payroll)
-                            <tr>
-                                <td class="px-6 py-4">{{ $payroll->employee->user->name }}</td>                                
-                                <td class="px-6 py-4 text-center">{{ $payroll->employee->department->name }}</td>                
-                                <td class="px-6 py-4 text-center">Rp {{ number_format($payroll->total_pay, 0, ',', '.') }}</td>
-                                <td class="px-6 py-4 text-center">{{ \Carbon\Carbon::createFromDate(null, (int)$payroll->month, 1)->format('F') }} {{ $payroll->year }}</td>
-                                <td class="px-6 py-4 text-center">
+                            <tr x-data="{ showDetails: false }" class="hover:bg-gray-50">
+                                {{-- Employee (desktop only) --}}
+                                <td class="px-6 py-4 text-sm text-gray-900 whitespace-normal break-words max-w-[200px] hidden sm:table-cell">
+                                    {{ $payroll->employee->user->name }}
+                                </td>
+
+                                {{-- Department (desktop only) --}}
+                                <td class="px-6 py-4 text-center text-sm text-gray-500 hidden sm:table-cell">
+                                    {{ $payroll->employee->department->name }}
+                                </td>
+
+                                {{-- Total Pay (desktop only) --}}
+                                <td class="px-6 py-4 text-center text-sm text-gray-500 hidden sm:table-cell">
+                                    Rp {{ number_format($payroll->total_pay, 0, ',', '.') }}
+                                </td>
+
+                                {{-- Period column (key column, always visible) --}}
+                                <td class="px-6 py-4 text-center text-sm text-gray-500 font-semibold">
+                                    {{ \Carbon\Carbon::createFromDate(null, (int)$payroll->month, 1)->format('F') }} {{ $payroll->year }}
+
+                                    {{-- Mobile: hidden details under period when toggled --}}
+                                    <div x-show="showDetails" x-transition class="mt-2 text-xs text-gray-500 space-y-1 sm:hidden">
+                                        <div><strong>Employee:</strong> {{ $payroll->employee->user->name }}</div>
+                                        <div><strong>Department:</strong> {{ $payroll->employee->department->name }}</div>
+                                        <div><strong>Total Pay:</strong> Rp {{ number_format($payroll->total_pay, 0, ',', '.') }}</div>
+                                        <div><strong>Payment:</strong>
+                                            @if($payroll->payment_datetime)
+                                                <span class="text-green-600 font-semibold">{{ $payroll->payment_datetime }}</span>
+                                            @else
+                                                <span class="text-gray-500 font-semibold">Unpaid</span>
+                                            @endif
+                                        </div>
+                                    </div>
+                                </td>
+
+                                {{-- Payment (desktop only) --}}
+                                <td class="px-6 py-4 text-center text-sm text-gray-500 hidden sm:table-cell">
                                     @if($payroll->payment_datetime)
                                         <span class="text-green-600 font-semibold">{{ $payroll->payment_datetime }}</span>
                                     @else
                                         <span class="text-gray-500 font-semibold">Unpaid</span>
                                     @endif
                                 </td>
-                                <td class="px-6 py-4 text-center">
-                                    @if($payroll->status === 'finalized')
-                                    <div class="flex flex-col gap-2 items-center">
-                                        <a href="{{ route('payroll.exportOne', $payroll) }}" 
-                                           class="px-2 py-1 bg-blue-500 text-white rounded hover:bg-blue-600 text-xs w-20 text-center">
-                                            Export
-                                        </a>
+
+                                {{-- Actions --}}
+                                <td class="px-6 py-4 text-sm text-center">
+                                    <div class="flex flex-col sm:flex-row sm:justify-center sm:items-center gap-2">
+                                        @if($payroll->status === 'finalized')
+                                            <a href="{{ route('payroll.exportOne', $payroll) }}"
+                                               class="w-full sm:w-auto px-3 py-1 bg-blue-500 text-white rounded-lg shadow hover:bg-blue-600 text-xs text-center">
+                                                Export
+                                            </a>
+                                        @endif
+
+                                        {{-- Toggle button for mobile --}}
+                                        <button @click="showDetails = !showDetails"
+                                                class="w-full sm:w-auto px-2 py-1 bg-gray-200 text-gray-700 rounded-lg text-xs hover:bg-gray-300 sm:hidden">
+                                            <span x-text="showDetails ? 'Hide Details' : 'Show Details'"></span>
+                                        </button>
                                     </div>
-                                    @endif
                                 </td>
                             </tr>
                         @empty
                             <tr>
-                                <td colspan="7" class="px-6 py-8 text-center text-gray-500">No payroll records found.</td>
+                                <td colspan="6" class="px-6 py-8 text-center text-gray-500">No payroll records found.</td>
                             </tr>
                         @endforelse
                     </tbody>
@@ -70,6 +125,7 @@
             </div>
         </div>
 
+        {{-- Pagination --}}
         @if($payrolls->hasPages())
             <div class="mt-6">
                 {{ $payrolls->links() }}
