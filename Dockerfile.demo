@@ -77,13 +77,13 @@ RUN mkdir -p storage/framework/{views,sessions,cache} bootstrap/cache public/bui
     chown -R www-data:www-data storage bootstrap/cache public/build
 
 # Copy Nginx config
-COPY docker/nginx/default.conf /etc/nginx/sites-available/default
+COPY docker/nginx/default.demo.conf /etc/nginx/sites-available/default
 
 # Copy entrypoint
-COPY docker-entrypoint.sh /usr/local/bin/docker-entrypoint.sh
-RUN chmod +x /usr/local/bin/docker-entrypoint.sh
+COPY docker-entrypoint.demo.sh /usr/local/bin/docker-entrypoint.demo.sh
+RUN chmod +x /usr/local/bin/docker-entrypoint.demo.sh
 
 # Expose PHP-FPM port
 EXPOSE 9000
 
-ENTRYPOINT ["sh", "/usr/local/bin/docker-entrypoint.sh"]
+ENTRYPOINT ["sh", "/usr/local/bin/docker-entrypoint.demo.sh"]
