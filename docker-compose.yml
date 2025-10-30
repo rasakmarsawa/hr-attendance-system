@@ -12,7 +12,7 @@ services:
       - .env.local
     # Optional: if DB_* variables are already in .env.local, you can skip this
     environment:
-      - APP_ENV=local
+      - APP_ENV=demo
       - DB_HOST=db
       - DB_PORT=3306
       - DB_DATABASE=${DB_DATABASE}

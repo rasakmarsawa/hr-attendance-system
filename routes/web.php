@@ -11,7 +11,7 @@ Route::get('/dashboard', function () {
     return view('dashboard.dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
 
-Route::middleware(['auth','role:Admin'])->group(function () {
+Route::middleware(['auth','role:Admin','demo.protect'])->group(function () {
     //user routes
     Route::resource('user', App\Http\Controllers\UserController::class)->except('edit','update');
 
@@ -44,7 +44,7 @@ Route::middleware(['auth','role:Admin'])->group(function () {
     Route::put('/payroll/pay/{payroll}', [App\Http\Controllers\PayrollController::class, 'pay'])->name('payroll.pay');
 });
 
-Route::middleware('auth')->group(function () {
+Route::middleware('auth','demo.protect')->group(function () {
     Route::get('/my-profile/{user}/edit', [App\Http\Controllers\UserController::class, 'edit'])->name('user.edit');
     Route::put('/my-profile/{user}', [App\Http\Controllers\UserController::class, 'update'])->name('user.update');        
     
