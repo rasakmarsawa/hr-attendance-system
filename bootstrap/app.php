@@ -18,6 +18,7 @@ return Application::configure(basePath: dirname(__DIR__))
 
         $middleware->alias([
             'role' => App\Http\Middleware\RoleMiddleware::class,
+            'demo.protect' => \App\Http\Middleware\DemoProtectionMiddleware::class,
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {
