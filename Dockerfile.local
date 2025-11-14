@@ -1,0 +1,70 @@
+# -------------------------------
+# Local Development Dockerfile
+# -------------------------------
+FROM php:8.3-fpm
+
+WORKDIR /var/www
+
+# -------------------------------
+# Install system dependencies (MySQL only)
+# -------------------------------
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    git \
+    unzip \
+    libzip-dev \
+    libonig-dev \
+    libxml2-dev \
+    default-mysql-client \
+    curl \
+    zip \
+    gnupg \
+    ca-certificates \
+    netcat-traditional \
+    npm \
+    && rm -rf /var/lib/apt/lists/*
+
+# -------------------------------
+# Install PHP extensions (MySQL only)
+# -------------------------------
+RUN docker-php-ext-install pdo_mysql zip
+
+# -------------------------------
+# Install Composer
+# -------------------------------
+COPY --from=composer:2.6 /usr/bin/composer /usr/bin/composer
+
+# -------------------------------
+# Copy package files & install frontend dependencies
+# -------------------------------
+COPY package*.json ./
+RUN npm install
+
+# -------------------------------
+# Copy the full application
+# -------------------------------
+COPY . .
+
+# -------------------------------
+# Install PHP dependencies (including dev packages)
+# -------------------------------
+RUN composer install
+
+# -------------------------------
+# Copy local entrypoint
+# -------------------------------
+# Make sure this file exists in your project at: ./docker-entrypoint.local.sh
+COPY docker-entrypoint.local.sh /usr/local/bin/docker-entrypoint.local.sh
+RUN chmod +x /usr/local/bin/docker-entrypoint.local.sh
+
+# -------------------------------
+# Expose PHP-FPM port
+# -------------------------------
+EXPOSE 9000
+
+# -------------------------------
+# Use local entrypoint
+# -------------------------------
+ENTRYPOINT ["sh", "/usr/local/bin/docker-entrypoint.local.sh"]
+
+# Default command
+CMD ["php-fpm"]

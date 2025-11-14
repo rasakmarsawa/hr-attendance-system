@@ -7,13 +7,13 @@ It includes authentication, department handling, and PDF/Excel report exports �
 
 ### 🖼️ Screenshots
 
-| Dashboard                                      | Employee List                                      | Attendance Report                                              |
-| ---------------------------------------------- | -------------------------------------------------- | -------------------------------------------------------------- |
-|<img width="400" height="250" alt="Screenshot from 2025-10-18 19-06-15" src="https://github.com/user-attachments/assets/2f613776-1aa0-4883-8add-52fae7692e2e" />|<img width="400" height="250" alt="Screenshot from 2025-10-18 19-06-48" src="https://github.com/user-attachments/assets/dbb0c4f0-1556-45b4-857d-53525a1616b3" />|<img width="400" height="250" alt="Screenshot from 2025-10-18 19-07-08" src="https://github.com/user-attachments/assets/74cdb06e-09db-4f22-9959-0e6bf0dbeb04" />|
+| Dashboard                                                                                                              | Employee List                                                                                                          | Attendance Report                                                                                                      |
+| ---------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------- |
+| <img width="400" height="250" src="https://github.com/user-attachments/assets/2f613776-1aa0-4883-8add-52fae7692e2e" /> | <img width="400" height="250" src="https://github.com/user-attachments/assets/dbb0c4f0-1556-45b4-857d-53525a1616b3" /> | <img width="400" height="250" src="https://github.com/user-attachments/assets/74cdb06e-09db-4f22-9959-0e6bf0dbeb04" /> |
 
-| Payroll                                    | Department Management                             |
-| ------------------------------------------ | ------------------------------------------------- |
-|<img width="400" height="250" alt="Screenshot from 2025-10-18 19-07-35" src="https://github.com/user-attachments/assets/afa31783-2b53-44c7-9c6b-64ec323d6617" />|<img width="400" height="250" alt="Screenshot from 2025-10-18 19-07-48" src="https://github.com/user-attachments/assets/439a1bd3-fb2b-4b5f-b486-095390c7c60d" />|
+| Payroll                                                                                                                | Department Management                                                                                                  |
+| ---------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------- |
+| <img width="400" height="250" src="https://github.com/user-attachments/assets/afa31783-2b53-44c7-9c6b-64ec323d6617" /> | <img width="400" height="250" src="https://github.com/user-attachments/assets/439a1bd3-fb2b-4b5f-b486-095390c7c60d" /> |
 
 ---
 
@@ -63,70 +63,112 @@ It includes authentication, department handling, and PDF/Excel report exports �
 
 ---
 
-### 🛠️ Installation Guide
+### 🐳 Dockerized Setup
 
-#### 1. Clone Repository
+This project runs inside Docker containers with Nginx, PHP-FPM, and MySQL. Migrations run automatically at startup.
+
+#### ⚙️ Prerequisites
+
+* Git
+* Docker Engine
+* Docker Compose v2
+
+---
+
+#### 🚀 Installation & Run
+
+1. **Clone repository**
 
 ```bash
 git clone https://github.com/rasakmarsawa/hr-attendance-system.git
 cd hr-attendance-system
 ```
 
-#### 2. Install Dependencies
-
-```bash
-composer install
-npm install
-```
-
-#### 3. Setup Environment
+2. **Copy environment file**
 
 ```bash
 cp .env.example .env
-php artisan key:generate
 ```
 
-#### 4. Configure Database
-
-Edit your `.env` file:
-
-```env
-DB_CONNECTION=mysql
-DB_HOST=127.0.0.1
-DB_PORT=3306
-DB_DATABASE=hr_system
-DB_USERNAME=root
-DB_PASSWORD=
-```
-
-#### 5. Run Migration and Seeder
+3. **Build containers**
 
 ```bash
-php artisan migrate --seed
+docker compose build
 ```
 
-#### 6. Build Frontend
+4. **Start application**
 
 ```bash
-npm run dev
+docker compose up -d
 ```
 
-#### 7. Start Server
-
-```bash
-php artisan serve
-```
-
-Visit: **[http://127.0.0.1:8000](http://127.0.0.1:8000)**
+Visit: [http://localhost:8000](http://localhost:8000)
 
 ---
 
-### 🔐 Default Access (from Seeder)
+#### 🛑 Stop Containers
 
-| Role     | Email                                               | Password |
-| -------- | --------------------------------------------------- | -------- |
-| Admin    | admin@example.com| password |
-| Employee | employee{number}@example.com| password |
+```bash
+docker compose down
+```
+
+**Optional:** Remove all containers **and volumes**:
+
+```bash
+docker compose down -v
+```
+
+---
+
+### 🌐 Access Points
+
+| Service     | URL / Host                                     | Notes                               |
+| ----------- | ---------------------------------------------- | ----------------------------------- |
+| Laravel App | [http://localhost:8000](http://localhost:8000) | Served via Nginx                    |
+| MySQL DB    | `localhost:3307`                               | Connect using credentials in `.env` |
+| PHP-FPM     | Internal only (`app` container)                | Handles PHP execution               |
+
+---
+
+### 🧩 Container Architecture
+
+```
++--------------------------+
+|        nginx             |
+|  (Port 8000 → 80 inside) |
+|  → serves static files   |
+|  → forwards PHP requests |
+|    to app:9000 (PHP-FPM) |
++-----------▲--------------+
+            |
+            ▼
++--------------------------+
+|          app             |
+|  Laravel + PHP-FPM       |
+|  Entrypoint:             |
+|   • Wait for MySQL       |
+|   • Run migrations       |
+|   • Start PHP-FPM        |
+|  Code mounted at /var/www|
++-----------▲--------------+
+            |
+            ▼
++--------------------------+
+|          db              |
+|  MySQL database          |
+|  Persists data via       |
+|  named volume `db_data`  |
++--------------------------+
+```
+
+---
+
+### 🔐 Default Access (Seeder)
+
+| Role     | Email                                         | Password |
+| -------- | --------------------------------------------- | -------- |
+| Admin    | [admin@example.com](mailto:admin@example.com) | password |
+| Employee | employee{number}@example.com                  | password |
 
 ---
 
@@ -159,23 +201,21 @@ database/migrations/
 
 ### 🧾 Export Reports
 
-You can export reports from the attendance or payroll views:
-
-* **PDF Reports:** powered by `barryvdh/laravel-dompdf`
-* **Excel Reports:** powered by `spatie/simple-excel`
+* **PDF Reports:** `barryvdh/laravel-dompdf`
+* **Excel Reports:** `spatie/simple-excel`
 
 ---
 
 ### 🧑‍💻 Author
 
-**Muhammad Yoga Affella Putra** — Laravel & PHP Developer  
-Passionate about building efficient backend systems and clean web applications.
-
+**Muhammad Yoga Affella Putra** — Laravel & PHP Developer
 🌐 [GitHub: @rasakmarsawa](https://github.com/rasakmarsawa)
-📧 [Contact via LinkedIn](www.linkedin.com/in/muhammad-yoga-affella-putra-a64774309)
+📧 [LinkedIn](www.linkedin.com/in/muhammad-yoga-affella-putra-a64774309)
 
 ---
 
 ### 📜 License
 
-This project is open-source and available under the **MIT License**.
+MIT License — open-source and free to use.
+
+---

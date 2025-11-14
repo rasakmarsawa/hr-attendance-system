@@ -9,6 +9,13 @@ use Carbon\Carbon;
 
 class AttendanceController extends Controller
 {
+    protected $cutoff;
+
+    public function __construct()
+    {
+        $this->cutoff = \Carbon\Carbon::createFromTime(10, 0, 0);
+    }
+
     public function index()
     {
         $attendances = Attendance::where('date', date('Y-m-d'))->get();
@@ -43,9 +50,7 @@ class AttendanceController extends Controller
 
         $today = date('Y-m-d');
         $currentTime = Carbon::now();
-        $cutoff = Carbon::createFromTime(10, 0, 0);
-
-        $status = $currentTime->gt($cutoff) ? 'late' : 'present';
+        $status = $this->determineStatus($currentTime);
 
         $attendance = Attendance::updateOrCreate(
             ['user_id' => $user->id, 'date' => $today],
@@ -112,4 +117,9 @@ class AttendanceController extends Controller
 
         return view('attendance.detail', compact('attendances', 'user', 'month', 'year'));
     }
+
+    public function determineStatus($currentTime)
+    {
+        return $currentTime->gt($this->cutoff) ? 'late' : 'present';
+    }    
 }

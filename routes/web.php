@@ -11,7 +11,7 @@ Route::get('/dashboard', function () {
     return view('dashboard.dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
 
-Route::middleware(['auth','role:Admin'])->group(function () {
+Route::middleware(['auth','role:Admin','demo.protect'])->group(function () {
     //user routes
     Route::resource('user', App\Http\Controllers\UserController::class)->except('edit','update');
 
@@ -19,7 +19,7 @@ Route::middleware(['auth','role:Admin'])->group(function () {
     Route::resource('department', App\Http\Controllers\DepartmentController::class)->except('show');
 
     //employee routes
-    Route::resource('employee', App\Http\Controllers\EmployeeController::class)->except('create')->except('index', 'show');
+    Route::resource('employee', App\Http\Controllers\EmployeeController::class)->except('create')->except('index', 'show', 'create');
     Route::get('/employee/create/{user}', [App\Http\Controllers\EmployeeController::class, 'create'])->name('employee.create');
 
     //attendance routes
@@ -30,7 +30,7 @@ Route::middleware(['auth','role:Admin'])->group(function () {
     Route::get('/attendance/detail/{user_id}/{month}/{year}', [App\Http\Controllers\AttendanceController::class, 'detail'])->name('attendance.detail');
 
     //payroll routes
-    Route::resource('payroll', App\Http\Controllers\PayrollController::class)->only(['edit', 'update', 'destroy']);
+    Route::resource('payroll', App\Http\Controllers\PayrollController::class)->only(['edit', 'update']);
     Route::get('/payroll/index/{month}/{year}', [App\Http\Controllers\PayrollController::class, 'index'])->name('payroll.index');
     
     //bulk routes
@@ -44,7 +44,7 @@ Route::middleware(['auth','role:Admin'])->group(function () {
     Route::put('/payroll/pay/{payroll}', [App\Http\Controllers\PayrollController::class, 'pay'])->name('payroll.pay');
 });
 
-Route::middleware('auth')->group(function () {
+Route::middleware('auth','demo.protect')->group(function () {
     Route::get('/my-profile/{user}/edit', [App\Http\Controllers\UserController::class, 'edit'])->name('user.edit');
     Route::put('/my-profile/{user}', [App\Http\Controllers\UserController::class, 'update'])->name('user.update');        
     
