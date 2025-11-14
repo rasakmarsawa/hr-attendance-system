@@ -11,6 +11,9 @@ while ! nc -z "$DB_HOST" "$DB_PORT"; do
 done
 echo "Database is ready."
 
+chown -R www-data:www-data storage bootstrap/cache
+chmod -R 775 storage bootstrap/cache
+
 # -------------------------------
 # Run Laravel migrations & seeders
 # -------------------------------
