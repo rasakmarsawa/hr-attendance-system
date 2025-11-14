@@ -7,17 +7,10 @@ services:
     restart: unless-stopped
     working_dir: /var/www
     volumes:
-      - .:/var/www:cached
+      - ./app:/var/www/app:cached
+      - ./routes:/var/www/routes:cached
     env_file:
       - .env.local
-    # Optional: if DB_* variables are already in .env.local, you can skip this
-    environment:
-      - APP_ENV=demo
-      - DB_HOST=db
-      - DB_PORT=3306
-      - DB_DATABASE=${DB_DATABASE}
-      - DB_USERNAME=${DB_USERNAME}
-      - DB_PASSWORD=${DB_PASSWORD}
     depends_on:
       - db
     entrypoint: ["sh", "/usr/local/bin/docker-entrypoint.local.sh"]
