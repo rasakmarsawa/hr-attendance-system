@@ -1,24 +1,43 @@
-*.log
-.DS_Store
+# Laravel
+/vendor/
+/node_modules/
 .env
-.env.backup
-.env.production
-.phpactor.json
+.env.*.backup
 .phpunit.result.cache
-/.fleet
-/.idea
-/.nova
-/.phpunit.cache
-/.vscode
-/.zed
-/auth.json
-/node_modules
-/public/build
+/storage/*.key
+/storage/app/public
+/storage/framework/cache/data
+/storage/logs/*.log
+/storage/debugbar/*
+/bootstrap/cache/*.php
+
+# Composer
+/composer.lock
+
+# Node / NPM
+package-lock.json
+npm-debug.log
+yarn-error.log
+
+# Docker
+docker-compose.override.yml
+.docker
+docker-entrypoint.*.sh
+Dockerfile.*
+/docker/*
+
+# IDE / System files
+.idea/
+*.sublime-workspace
+*.sublime-project
+*.vscode/
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+
+# Misc
+/folder_structure.txt
 /public/hot
 /public/storage
-/storage/*.key
-/storage/pail
-/vendor
-Homestead.json
-Homestead.yaml
-Thumbs.db
